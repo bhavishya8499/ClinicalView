@@ -1,0 +1,89 @@
+﻿@page "{id:int}"
+@model ClinicalView.Pages.Patients.DocumentsModel
+@{
+    ViewData["Title"] = "Documents - " + Display.PatientName(Model.Header.Patient);
+}
+
+@section Banner {
+    <partial name="_PatientBanner" model="Model.Header" />
+}
+
+<div class="chart-layout">
+    <partial name="_PatientNav" model="Model.Header" />
+
+    <div class="chart-content">
+        <section class="panel">
+            <div class="panel-head">
+                <h2>Documents <span class="muted fw-normal">&middot; @Model.Documents.Count</span></h2>
+            </div>
+
+            @if (!Model.Documents.Any())
+            {
+                <div class="empty-state">No documents on file for this patient.</div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Document</th><th>Type</th><th>Document date</th><th>Uploaded</th><th><span class="visually-hidden">Actions</span></th></tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var doc in Model.Documents)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="doc-name">
+                                            <span class="file-badge file-@doc.FileExtension.ToLowerInvariant()">@doc.FileExtension</span>
+                                            <span class="fw-semibold">@doc.DocumentName</span>
+                                        </div>
+                                    </td>
+                                    <td>@doc.DocumentType</td>
+                                    <td>@Display.Date(doc.DocumentDate)</td>
+                                    <td>@Display.DateAndTime(doc.UploadedDate)</td>
+                                    <td class="actions">
+                                        @if (doc.ViewMode == "download")
+                                        {
+                                            <a class="btn btn-sm btn-primary" href="@doc.DownloadUrl">Download</a>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn btn-sm btn-primary js-view-document"
+                                                    data-url="@doc.FileUrl" data-download-url="@doc.DownloadUrl"
+                                                    data-mode="@doc.ViewMode" data-name="@doc.DocumentName">
+                                                View
+                                            </button>
+                                            <a class="btn btn-sm btn-outline-primary" href="@doc.DownloadUrl">Download</a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <p class="panel-note">PDF and image files open in a preview window. Browsers can't display Word files, so those download instead.</p>
+            }
+        </section>
+    </div>
+</div>
+
+@* Pop-up window used to preview a PDF or image. Filled in by wwwroot/js/documents.js. *@
+<div class="modal fade" id="documentModal" tabindex="-1" aria-labelledby="documentModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5" id="documentModalTitle">Document</h2>
+                <a id="documentModalDownload" class="btn btn-sm btn-outline-primary ms-auto me-3" href="#">Download</a>
+                <button type="button" class="btn-close ms-0" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body document-viewer">
+                <iframe id="documentFrame" title="Document preview" class="d-none"></iframe>
+                <img id="documentImage" alt="" class="d-none" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/documents.js" asp-append-version="true"></script>
+}

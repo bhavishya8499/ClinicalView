@@ -1,0 +1,45 @@
+﻿@model PatientHeaderViewModel
+@{
+    var patient = Model.Patient;
+    var activeAllergies = Model.Allergies.Where(a => a.Status == "Active").ToList();
+}
+
+@* The strip across the top of every chart page. Clinicians check this first,
+   so allergies and alerts are always visible here. *@
+<section class="patient-banner" aria-label="Patient">
+    <div class="banner-inner">
+        <div class="banner-avatar" aria-hidden="true">@Display.Initials(patient)</div>
+
+        <div class="banner-id">
+            <h1 class="banner-name">@Display.PatientName(patient)</h1>
+            <div class="banner-facts">
+                <span><strong>@patient.Gender</strong> &middot; @patient.Age y</span>
+                <span>DOB <strong>@Display.Date(patient.DOB)</strong></span>
+                <span>MRN <strong>@patient.MRN</strong></span>
+                @if (!string.IsNullOrEmpty(patient.PhoneNumber))
+                {
+                    <span>@patient.PhoneNumber</span>
+                }
+            </div>
+        </div>
+
+        <div class="banner-flags">
+            @if (activeAllergies.Any())
+            {
+                <span class="flag flag-red">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4M12 17h.01" /><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" /></svg>
+                    Allergies: @string.Join(", ", activeAllergies.Select(a => a.AllergyName))
+                </span>
+            }
+            else
+            {
+                <span class="flag flag-green">No Known Allergies</span>
+            }
+
+            @foreach (var alert in Model.Alerts)
+            {
+                <span class="flag @(alert.Severity == "High" ? "flag-amber" : "flag-blue")" title="@alert.Description">@alert.AlertType</span>
+            }
+        </div>
+    </div>
+</section>

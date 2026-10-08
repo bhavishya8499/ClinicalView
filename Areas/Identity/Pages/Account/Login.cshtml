@@ -1,0 +1,80 @@
+﻿@page
+@model ClinicalView.Areas.Identity.Pages.Account.LoginModel
+@inject IWebHostEnvironment Env
+@{
+    ViewData["Title"] = "Sign in";
+}
+
+<div class="login-shell">
+    <div class="login-brand">
+        <div>
+            <h1>Patient Information Portal</h1>
+            <p>Search patients and review demographics, allergies, alerts, medications and clinical documents in one place.</p>
+            <ul class="login-points">
+                <li>Secure sign-in with Google or a local account</li>
+                <li>Every chart view is logged</li>
+                <li>Automatic sign-out after 20 idle minutes</li>
+            </ul>
+        </div>
+        <p class="login-legal">Authorized use only. Contains protected health information.</p>
+    </div>
+
+    <div class="login-panel">
+        <div class="login-card">
+            <h2>Sign in</h2>
+
+            @if (Model.ExternalLogins.Any())
+            {
+                <form method="post" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
+                    @foreach (var provider in Model.ExternalLogins)
+                    {
+                        <button type="submit" class="btn-google" name="provider" value="@provider.Name">
+                            <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.6l6.7-6.7C35.6 2.5 30.2 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.8 6C12.4 13.7 17.7 9.5 24 9.5z" /><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.3-4.6 7l7.2 5.6c4.2-3.9 7.1-9.7 7.1-17.1z" /><path fill="#FBBC05" d="M10.5 28.7c-.5-1.4-.8-3-.8-4.7s.3-3.2.8-4.7l-7.8-6C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.8-6z" /><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.2-5.6c-2.2 1.5-5.1 2.4-8.7 2.4-6.3 0-11.6-4.2-13.5-9.9l-7.8 6C6.6 42.6 14.6 48 24 48z" /></svg>
+                            Sign in with @provider.DisplayName
+                        </button>
+                    }
+                </form>
+                <div class="login-divider"><span>or use a local account</span></div>
+            }
+
+            <form method="post" asp-route-returnUrl="@Model.ReturnUrl" novalidate>
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2" role="alert"></div>
+
+                <div class="field mb-3">
+                    <label asp-for="Input.Email">Email</label>
+                    <input asp-for="Input.Email" class="form-control" autocomplete="username" />
+                    <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                </div>
+
+                <div class="field mb-3">
+                    <label asp-for="Input.Password">Password</label>
+                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" />
+                    <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input asp-for="Input.RememberMe" class="form-check-input" />
+                    <label asp-for="Input.RememberMe" class="form-check-label"></label>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 btn-lg-touch">Sign in</button>
+            </form>
+
+            <p class="small mt-3 mb-0">
+                No account? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register</a>
+            </p>
+
+            @if (Env.IsDevelopment())
+            {
+                <div class="demo-hint">
+                    <strong>Demo account</strong><br />
+                    demo@clinic.test / Demo@12345
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

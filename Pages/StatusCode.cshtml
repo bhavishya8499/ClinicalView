@@ -1,0 +1,12 @@
+﻿@page "/StatusCode/{code:int}"
+@model StatusCodeModel
+@{
+    ViewData["Title"] = Model.Heading;
+}
+
+<div class="message-page">
+    <div class="message-code">@Model.Code</div>
+    <h1>@Model.Heading</h1>
+    <p class="muted">@Model.Message</p>
+    <a class="btn btn-primary" asp-area="" asp-page="/Index">Back to patient search</a>
+</div>

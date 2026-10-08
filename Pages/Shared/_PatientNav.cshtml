@@ -1,0 +1,27 @@
+﻿@model PatientHeaderViewModel
+@{
+    var id = Model.Patient.PatientId;
+    var onChart = Model.ActivePage == "chart";
+    var activeAllergyCount = Model.Allergies.Count(a => a.Status == "Active");
+}
+
+@* Left-hand menu on the chart pages. On a phone it turns into a row of tabs (see site.css). *@
+<nav class="chart-nav" aria-label="Chart sections">
+    <a asp-page="/Patients/Chart" asp-route-id="@id" asp-fragment="demographics" class="@(onChart ? "active" : "")">Demographics</a>
+    <a asp-page="/Patients/Chart" asp-route-id="@id" asp-fragment="allergies">
+        Allergies
+        @if (activeAllergyCount > 0)
+        {
+            <span class="count count-red">@activeAllergyCount</span>
+        }
+    </a>
+    <a asp-page="/Patients/Chart" asp-route-id="@id" asp-fragment="alerts">
+        Alerts
+        @if (Model.Alerts.Count > 0)
+        {
+            <span class="count count-amber">@Model.Alerts.Count</span>
+        }
+    </a>
+    <a asp-page="/Patients/Chart" asp-route-id="@id" asp-fragment="medications">Medications</a>
+    <a asp-page="/Patients/Documents" asp-route-id="@id" class="@(onChart ? "" : "active")">Documents</a>
+</nav>
