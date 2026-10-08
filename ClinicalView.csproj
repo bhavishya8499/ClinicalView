@@ -19,10 +19,7 @@
 
   <ItemGroup>
     <Folder Include="App_Data\Documents\" />
-    <Folder Include="Dtos\" />
-    <Folder Include="Helpers\" />
     <Folder Include="Controllers\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>
