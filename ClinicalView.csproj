@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <Folder Include="App_Data\Documents\" />
-    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>
