@@ -91,10 +91,3 @@ App_Data/      Sample document files (served only through the API)
 - **Clinical display conventions:** names as LAST, First; DOB with age; allergies shown in the banner on every chart page; "No Known Allergies" stated explicitly instead of an empty table.
 - **Logging** of searches, chart views, document opens and PDF prints, as a starting point for an audit trail.
 
-## What I'd add with more time
-
-- A proper audit log table and screen (who viewed which chart, and when)
-- Role-based access (for example, front desk vs. clinician)
-- Unit tests for the search service and validation
-- FHIR R4 endpoints (Patient, AllergyIntolerance, MedicationStatement)
-- Deployment to Azure App Service with Azure SQL
